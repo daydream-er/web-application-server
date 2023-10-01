@@ -42,7 +42,7 @@ public class RequestHandler extends Thread {
         			tokens = line.split(" ");
         			request_url = false;
         		}
-        		System.out.println(line);
+        		System.out.println("sangwoki" + line);
         	}
         	// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
