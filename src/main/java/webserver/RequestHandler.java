@@ -66,6 +66,11 @@ public class RequestHandler extends Thread {
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         		System.out.println("index.html body: " + body.length);
         	}
+        	else if (url.equals("/user/form.html"))
+        	{
+        		body = Files.readAllBytes(new File("./user/form.html").toPath());
+        		System.out.println("user/form.html: " + body.length);
+        	}
         	else
         	{
         		body = "Hello World".getBytes();
