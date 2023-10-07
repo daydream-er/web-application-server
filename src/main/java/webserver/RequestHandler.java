@@ -58,6 +58,7 @@ public class RequestHandler extends Thread {
         	String	url = null;
         	if (tokens != null)
         		url = tokens[1];
+        	System.out.println(url);
         	if (url == "/index.html")
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         	else
