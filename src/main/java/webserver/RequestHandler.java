@@ -41,7 +41,7 @@ public class RequestHandler extends Thread {
 
         	request_url = true;
         	String[]	tokens = null;
-        	String params;
+        	String params = null;
         	
         	line = br.readLine();
         	if (!line.equals("") || line != null)
