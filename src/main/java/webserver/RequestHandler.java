@@ -67,6 +67,7 @@ public class RequestHandler extends Thread {
         		body = "Hello World".getBytes();
         		if (url != null && url.indexOf('?') != -1)
         		{
+        			System.out.println("here is user");
         			String reqeustPath = url.substring(0, url.indexOf('?'));
         			System.out.println(reqeustPath);
         			String params = url.substring(url.indexOf('?'));
