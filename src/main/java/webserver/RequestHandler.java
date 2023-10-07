@@ -51,6 +51,7 @@ public class RequestHandler extends Thread {
         		}
         		System.out.println("$>" + line);
         	}
+        	System.out.println("readLine is end");
         	// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
             // byte[] body = "Hello World".getBytes();
