@@ -60,9 +60,8 @@ public class RequestHandler extends Thread {
         	System.out.println(url);
         	if (url.equals("/index.html"))
         	{
-        		System.out.println("before Read Bytes");
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
-        		System.out.println("After Read Bytes");
+        		System.out.println("index.html body: " + body.length);
         	}
         	else
         	{
