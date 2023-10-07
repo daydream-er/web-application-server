@@ -61,15 +61,10 @@ public class RequestHandler extends Thread {
         	if (tokens != null)
         		url= tokens[1];
         	System.out.println(url);
-        	if (url.equals("/index.html"))
+        	if (url.equals("/index.html") || url.equals("/user/form.html"))
         	{
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
-        		System.out.println("index.html body: " + body.length);
-        	}
-        	else if (url.equals("/user/form.html"))
-        	{
-        		body = Files.readAllBytes(new File("./user/form.html").toPath());
-        		System.out.println("user/form.html: " + body.length);
+        		System.out.println(url + ": " + body.length);
         	}
         	else
         	{
