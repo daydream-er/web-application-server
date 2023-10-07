@@ -42,21 +42,24 @@ public class RequestHandler extends Thread {
         	while (true)
         	{
         		line = br.readLine();
-        		if (line == "" || line == null)
+        		if (line.equals("") || line == null)
         			break ;
         		if (request_url)
         		{
         			tokens = line.split(" ");
         			request_url = false;
         		}
-        		System.out.println("$>" + line);
+        		System.out.println("[" + line + "]");
         	}
         	System.out.println("readLine is end");
         	// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
             // byte[] body = "Hello World".getBytes();
             byte[] body;
-        	String	url = tokens[1];
+            
+        	String	url = null;
+        	if (tokens != null)
+        		url= tokens[1];
         	System.out.println(url);
         	if (url.equals("/index.html"))
         	{
