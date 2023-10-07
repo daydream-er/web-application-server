@@ -57,7 +57,7 @@ public class RequestHandler extends Thread {
             // byte[] body = "Hello World".getBytes();
             byte[] body;
         	String	url = null;
-        	if (tokens != null)
+        	if (tokens != null && tokens.length >= 1)
         		url = tokens[1];
         	System.out.println(url);
         	if (url == "/index.html")
