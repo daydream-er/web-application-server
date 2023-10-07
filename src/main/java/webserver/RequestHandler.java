@@ -74,7 +74,7 @@ public class RequestHandler extends Thread {
         			System.out.println("here is user");
         			String reqeustPath = url.substring(0, url.indexOf('?'));
         			System.out.println(reqeustPath);
-        			String params = url.substring(url.indexOf('?'));
+        			String params = url.substring(url.indexOf('?') - 1);
         			Map<String, String> um = HttpRequestUtils.parseQueryString(params);
         			User	user = new User(um.get("userId"), um.get("password"), um.get("name"), um.get("email"));
         			System.out.println(user.toString());
