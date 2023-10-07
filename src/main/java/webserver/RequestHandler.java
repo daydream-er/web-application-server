@@ -55,13 +55,15 @@ public class RequestHandler extends Thread {
             DataOutputStream dos = new DataOutputStream(out);
             // byte[] body = "Hello World".getBytes();
             byte[] body;
-        	String	url = tokens[1];
+        	String	url = null;
+        	if (url != null)
+        		url = tokens[1];
         	if (url == "/index.html")
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         	else
         	{
         		body = "Hello World".getBytes();
-        		if (url.indexOf('?') != -1)
+        		if (url != null && url.indexOf('?') != -1)
         		{
         			String reqeustPath = url.substring(0, url.indexOf('?'));
         			System.out.println(reqeustPath);
