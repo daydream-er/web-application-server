@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 
 import model.User;
+import util.IOUtils;
 import util.HttpRequestUtils;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,22 +35,34 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
         	InputStreamReader	reader = new InputStreamReader(in);
         	BufferedReader	br = new BufferedReader(reader);
-        	String	line;
+        	String	line = null;
+        	String	method = null;
         	boolean	request_url;
 
         	request_url = true;
         	String[]	tokens = null;
-        	while (true)
+        	String params;
+        	
+        	line = br.readLine();
+        	if (!line.equals("") || line != null)
         	{
-        		line = br.readLine();
-        		if (line.equals("") || line == null)
-        			break ;
-        		if (request_url)
+        		tokens = line.split(" ");
+            	method = tokens[0];
+        	}
+        	long	content_length = 0;
+        	while (!line.equals("") && line != null)
+        	{
+        		line = br.readLine();  
+        		if (method.equals("POST") && line.split(":")[0].equals("Content-Length"))
         		{
-        			tokens = line.split(" ");
-        			request_url = false;
+        			content_length = Long.parseLong(line.split(":")[1]);
+        			System.out.println(content_length + " < value");
         		}
         		System.out.println("[" + line + "]");
+        	}
+        	if (method.equals("POST"))
+        	{
+            	params = IOUtils.readData(br, (int)content_length);
         	}
         	System.out.println("readLine is end");
         	// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
@@ -59,7 +72,7 @@ public class RequestHandler extends Thread {
             
         	String	url = null;
         	if (tokens != null)
-        		url= tokens[1];
+        		url = tokens[1];
         	System.out.println(url);
         	if (url.equals("/index.html") || url.equals("/user/form.html"))
         	{
@@ -69,12 +82,18 @@ public class RequestHandler extends Thread {
         	else
         	{
         		body = "Hello World".getBytes();
-        		if (url != null && url.indexOf('?') != -1)
+        		if (url != null && method.equals("GET") && url.indexOf('?') != -1)
         		{
         			System.out.println("here is user");
         			String reqeustPath = url.substring(0, url.indexOf('?'));
         			System.out.println(reqeustPath);
-        			String params = url.substring(url.indexOf('?') + 1);
+        			params = url.substring(url.indexOf('?') + 1);
+        			Map<String, String> um = HttpRequestUtils.parseQueryString(params);
+        			User	user = new User(um.get("userId"), um.get("password"), um.get("name"), um.get("email"));
+        			System.out.println(user.toString());
+        		}
+        		else if (url != null && method.equals("POST"))
+        		{
         			Map<String, String> um = HttpRequestUtils.parseQueryString(params);
         			User	user = new User(um.get("userId"), um.get("password"), um.get("name"), um.get("email"));
         			System.out.println(user.toString());
