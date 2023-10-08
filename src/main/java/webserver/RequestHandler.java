@@ -75,7 +75,6 @@ public class RequestHandler extends Thread {
         	String	url = null;
         	if (tokens != null)
         		url = tokens[1];
-        	System.out.println(url);
         	if (url != null)
         	{
         		System.out.println("url [" + url + "]");
@@ -104,7 +103,7 @@ public class RequestHandler extends Thread {
         		{
         			Map<String, String> um = HttpRequestUtils.parseQueryString(params);
         			User	user = new User(um.get("userId"), um.get("password"), um.get("name"), um.get("email"));
-        			DataBase.addUser(user);
+        			// DataBase.addUser(user);
         			System.out.println(user.toString());
         		}
         	}
