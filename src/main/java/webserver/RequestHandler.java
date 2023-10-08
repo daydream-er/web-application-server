@@ -55,7 +55,7 @@ public class RequestHandler extends Thread {
         		line = br.readLine();  
         		if (method.equals("POST") && line.split(":")[0].equals("Content-Length"))
         		{
-        			content_length = Long.parseLong(line.split(":")[1]);
+        			content_length = Long.parseLong(line.split(":")[1].trim());
         			System.out.println(content_length + " < value");
         		}
         		System.out.println("[" + line + "]");
