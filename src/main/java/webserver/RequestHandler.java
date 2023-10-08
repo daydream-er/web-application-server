@@ -99,13 +99,27 @@ public class RequestHandler extends Thread {
         			System.out.println(user.toString());
         		}
         	}
-        	response200Header(dos, body.length);
+        	if (url.equals("/user/form.html"))
+        		response302Header(dos, body.length);
+        	else
+        		response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
+    private void response302Header(DataOutputStream dos, int lengthOfBodyContent) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 OK \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+    
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
