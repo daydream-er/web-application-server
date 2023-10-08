@@ -100,7 +100,7 @@ public class RequestHandler extends Thread {
         		}
         	}
         	if (method != null && method.equals("POST"))
-        		response302Header(dos, "./index.html");
+        		response302Header(dos, "/index.html");
         	else
         	{
         		response200Header(dos, body.length);
