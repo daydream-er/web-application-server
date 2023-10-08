@@ -47,6 +47,7 @@ public class RequestHandler extends Thread {
         	line = br.readLine();
         	if (line != null && !line.equals(""))
         	{
+        		System.out.println("[" + line + "]");
         		tokens = line.split(" ");
             	method = tokens[0];
         	}
@@ -57,13 +58,13 @@ public class RequestHandler extends Thread {
         		if (method.equals("POST") && line.split(":")[0].equals("Content-Length"))
         		{
         			content_length = Long.parseLong(line.split(":")[1].trim());
-        			System.out.println(content_length + " < value");
         		}
         		System.out.println("[" + line + "]");
         	}
         	if (method != null && method.equals("POST"))
         	{
             	params = IOUtils.readData(br, (int)content_length);
+            	System.out.println(params);
         	}
         	System.out.println("readLine is end");
         	// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
@@ -76,7 +77,10 @@ public class RequestHandler extends Thread {
         		url = tokens[1];
         	System.out.println(url);
         	if (url != null)
+        	{
+        		System.out.println("url [" + url + "]");
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
+        	}
         	else
         		body = "Hello World".getBytes();
         	if (url.equals("/index.html") || url.equals("/user/form.html"))
@@ -120,7 +124,10 @@ public class RequestHandler extends Thread {
         		}
         	}
         	else if (method != null && method.equals("POST"))
+        	{
+        		System.out.println("[" + url + "]; " + "redirect to /index.html");
         		response302Header(dos, "/index.html");
+        	}
         	else
         	{
         		response200Header(dos, body.length);
