@@ -61,7 +61,7 @@ public class RequestHandler extends Thread {
         		}
         		System.out.println("[" + line + "]");
         	}
-        	if (method.equals("POST"))
+        	if (method != null && method.equals("POST"))
         	{
             	params = IOUtils.readData(br, (int)content_length);
         	}
@@ -75,9 +75,10 @@ public class RequestHandler extends Thread {
         	if (tokens != null)
         		url = tokens[1];
         	System.out.println(url);
-        	body = "Hello World".getBytes();
         	if (url != null)
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
+        	else
+        		body = "Hello World".getBytes();
         	if (url.equals("/index.html") || url.equals("/user/form.html"))
         	{
         		System.out.println(url + ": " + body.length);
@@ -118,7 +119,7 @@ public class RequestHandler extends Thread {
         			response302Header(dos, "/user/login_failed.html");
         		}
         	}
-        	if (method != null && method.equals("POST"))
+        	else if (method != null && method.equals("POST"))
         		response302Header(dos, "/index.html");
         	else
         	{
