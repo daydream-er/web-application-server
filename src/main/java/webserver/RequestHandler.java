@@ -45,7 +45,7 @@ public class RequestHandler extends Thread {
         	String params = null;
         	
         	line = br.readLine();
-        	if (!line.equals("") || line != null)
+        	if (line != null && !line.equals(""))
         	{
         		tokens = line.split(" ");
             	method = tokens[0];
