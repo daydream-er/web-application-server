@@ -50,7 +50,7 @@ public class RequestHandler extends Thread {
             	method = tokens[0];
         	}
         	long	content_length = 0;
-        	while (!line.equals("") && line != null)
+        	while (line != null && !line.equals(""))
         	{
         		line = br.readLine();  
         		if (method.equals("POST") && line.split(":")[0].equals("Content-Length"))
