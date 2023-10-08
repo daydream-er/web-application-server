@@ -100,23 +100,21 @@ public class RequestHandler extends Thread {
         		}
         	}
         	if (method != null && method.equals("POST"))
-        	{
-        		body = Files.readAllBytes(new File("./webapp/index.html").toPath());
-        		response302Header(dos, body.length);
-        	}
+        		response302Header(dos, "./index.html");
         	else
+        	{
         		response200Header(dos, body.length);
-            responseBody(dos, body);
+                responseBody(dos, body);
+        	}
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void response302Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response302Header(DataOutputStream dos, String location) {
         try {
-            dos.writeBytes("HTTP/1.1 302 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + location);
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
