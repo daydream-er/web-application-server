@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import model.User;
 import util.IOUtils;
 import util.HttpRequestUtils;
+import db.DataBase;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
@@ -74,14 +75,15 @@ public class RequestHandler extends Thread {
         	if (tokens != null)
         		url = tokens[1];
         	System.out.println(url);
+        	body = "Hello World".getBytes();
+        	if (url != null)
+        		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         	if (url.equals("/index.html") || url.equals("/user/form.html"))
         	{
-        		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         		System.out.println(url + ": " + body.length);
         	}
         	else
         	{
-        		body = "Hello World".getBytes();
         		if (url != null && method.equals("GET") && url.indexOf('?') != -1)
         		{
         			System.out.println("here is user");
@@ -90,13 +92,30 @@ public class RequestHandler extends Thread {
         			params = url.substring(url.indexOf('?') + 1);
         			Map<String, String> um = HttpRequestUtils.parseQueryString(params);
         			User	user = new User(um.get("userId"), um.get("password"), um.get("name"), um.get("email"));
+        			DataBase.addUser(user);
         			System.out.println(user.toString());
         		}
         		else if (url != null && method.equals("POST"))
         		{
         			Map<String, String> um = HttpRequestUtils.parseQueryString(params);
         			User	user = new User(um.get("userId"), um.get("password"), um.get("name"), um.get("email"));
+        			DataBase.addUser(user);
         			System.out.println(user.toString());
+        		}
+        	}
+        	if (url != null && url.equals("/user/login.html") && method.equals("POST"))
+        	{
+        		Map<String, String> um = HttpRequestUtils.parseQueryString(params);
+        		User user = DataBase.findUserById(um.get("userId"));
+        		if (user != null && user.getPassword().equals(um.get("password")))
+        		{
+        			response200Header(dos, true);
+        			response302Header(dos, "/index.html");
+        		}
+        		else
+        		{
+        			response200Header(dos, false);
+        			response302Header(dos, "/user/login_failed.html");
         		}
         	}
         	if (method != null && method.equals("POST"))
@@ -111,10 +130,24 @@ public class RequestHandler extends Thread {
         }
     }
 
+    private void response200Header(DataOutputStream dos, boolean set_cookie)
+    {
+    	try {
+            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/html\r\n");
+            if (set_cookie)
+            	dos.writeBytes("Set-Cookie: logined=true\r\n");
+            else
+            	dos.writeBytes("Set-Cookie: logined=false\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
     private void response302Header(DataOutputStream dos, String location) {
         try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
-            dos.writeBytes("Location: " + location);
+            dos.writeBytes("Location: " + location + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
