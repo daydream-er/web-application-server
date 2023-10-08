@@ -74,8 +74,12 @@ public class RequestHandler extends Thread {
         	if (tokens != null)
         		url = tokens[1];
         	System.out.println(url);
+        	boolean	is_form = false;
         	if (url.equals("/index.html") || url.equals("/user/form.html"))
         	{
+        		if (url.equals("/user/form.html"))
+        			is_form = true;
+        		url = "/index.html";
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         		System.out.println(url + ": " + body.length);
         	}
@@ -99,7 +103,7 @@ public class RequestHandler extends Thread {
         			System.out.println(user.toString());
         		}
         	}
-        	if (url.equals("/user/form.html"))
+        	if (is_form)
         		response302Header(dos, body.length);
         	else
         		response200Header(dos, body.length);
