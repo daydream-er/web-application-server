@@ -78,6 +78,8 @@ public class RequestHandler extends Thread {
         	if (url != null)
         	{
         		System.out.println("url [" + url + "]");
+        		if (url == "/")
+        			url = "/index.html";
         		body = Files.readAllBytes(new File("./webapp" + url).toPath());
         	}
         	else
@@ -129,19 +131,35 @@ public class RequestHandler extends Thread {
         	}
         	else
         	{
-        		response200Header(dos, body.length);
+        		if (url.equals("/css/styles.css"))
+        			response200Header(dos, false, true);
+        		else
+        			response200Header(dos, false);
                 responseBody(dos, body);
         	}
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
-
+    private void response200Header(DataOutputStream dos, boolean set_cookie, boolean is_css)
+    {
+    	System.out.println("CSS\n");
+        try {
+        	dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css; charset=utf-8\r\n");
+            dos.writeBytes("Connection: keep-alive");
+            dos.writeBytes("\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
     private void response200Header(DataOutputStream dos, boolean set_cookie)
     {
     	try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html\r\n");
+            dos.writeBytes("Content-Type: text/html; charset=utf-8\r\n");
+            dos.writeBytes("Connection: keep-alive");
             if (set_cookie)
             	dos.writeBytes("Set-Cookie: logined=true\r\n");
             else
@@ -159,19 +177,17 @@ public class RequestHandler extends Thread {
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-    }
-    
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
+    } 
+//    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+//        try {
+//            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+//            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+//            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+//            dos.writeBytes("\r\n");
+//        } catch (IOException e) {
+//            log.error(e.getMessage());
+//        }
+//    }
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
             dos.write(body, 0, body.length);
